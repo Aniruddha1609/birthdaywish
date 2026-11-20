@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Birthday My Love</title>
+    <title>Happy Birthday </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700;800&display=swap"
         rel="stylesheet">
@@ -192,29 +192,6 @@
             }
         }
 
-        .typing {
-            border-right: 3px solid #ff2e83;
-            white-space: nowrap;
-            overflow: hidden;
-            animation: typing 3.5s steps(40), blink .7s infinite;
-        }
-
-        @keyframes typing {
-            from {
-                width: 0;
-            }
-
-            to {
-                width: 100%;
-            }
-        }
-
-        @keyframes blink {
-            50% {
-                border-color: transparent;
-            }
-        }
-
         .cake {
             position: relative;
             width: 210px;
@@ -308,6 +285,19 @@
                 transform: translateX(8px);
             }
         }
+
+        /* Polaroid styling for photo blocks */
+        .polaroid {
+            background: white;
+            padding: 10px 10px 20px 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .polaroid:hover {
+            transform: translateY(-5px) rotate(1deg) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 47, 134, 0.25);
+        }
     </style>
 </head>
 
@@ -319,6 +309,8 @@
 
     <main class="relative z-10 w-full max-w-3xl">
         <div class="glass rounded-[2rem] p-6 sm:p-10 text-center min-h-[560px] flex items-center justify-center">
+
+            <!-- Step 0: Intro -->
             <section class="step active w-full" data-step="0">
                 <p class="uppercase tracking-[.35em] text-sm text-black mb-4">A tiny surprise for you</p>
                 <h1 class="font-love text-5xl sm:text-7xl text-black drop-shadow-lg mb-10">Hey Veltu raam</h1>
@@ -328,6 +320,7 @@
                     Your Surprise 💝</button>
             </section>
 
+            <!-- Step 1: Heart Catch Game -->
             <section class="step w-full" data-step="1">
                 <h2 class="font-love text-4xl sm:text-6xl mb-5">First, catch these hearts</h2>
                 <p class="mb-6 text-black/90">Click the floating heart 5 times to unlock your birthday wish.</p>
@@ -340,19 +333,19 @@
                 </div>
             </section>
 
+            <!-- Step 2: Gift Box -->
             <section class="step w-full" data-step="2">
-                <h2 class="font-love text-4xl sm:text-6xl mb-7 text-transform: uppercase;">A Gift For You</h2>
-                <p class="mb-10 text-black/90 ">Tap the gift box gently.</p>
+                <h2 class="font-love text-4xl sm:text-6xl mb-7 uppercase">A Gift For You</h2>
+                <p class="mb-10 text-black/90">Tap the gift box gently.</p>
                 <div class="gift-box" onclick="openGift(this)">
                     <div class="gift-lid"></div>
                 </div>
                 <p id="giftMessage" class="hidden mt-10 text-2xl font-semibold text-black">Inside this gift is my love,
-                    my
-                    prayers, and my forever smile for you. 🥺❤️</p>
+                    my prayers, and my forever smile for you. 🥺❤️</p>
             </section>
 
+            <!-- Step 3: Cake & Candle -->
             <section class="step w-full" data-step="3">
-
                 <div class="cake mb-8">
                     <div class="flame" id="flame"></div>
                     <div class="candle"></div>
@@ -361,45 +354,99 @@
                 </div>
                 <p class="mb-6 text-black/90">Click the candle flame to blow it out.</p>
                 <button onclick="blowCandle()"
-                    class="bg-pink-600 hover:bg-pink-700 text-black px-8 py-4 rounded-full font-bold shadow-xl transition">Blow
+                    class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-full font-bold shadow-xl transition">Blow
                     Candle 🕯️</button>
             </section>
 
+            <!-- Step 4: Aesthetic Photo Blocks Section -->
             <section class="step w-full" data-step="4">
-                <p class="uppercase tracking-[.35em] text-sm text-pink-100 mb-4">Final Message</p>
-                <h2 class="font-love text-5xl sm:text-7xl mb-6">Happy Birthday Veltu raam 🎂</h2>
+                <p class="uppercase tracking-[.35em] text-sm text-black/80 mb-2">Introducing ----</p>
+                <h2 class="font-love text-4xl sm:text-5xl mb-6">Ms Trisha Banerjee✨</h2>
 
-                <!-- Added max-h-[45vh] and overflow-y-auto here -->
+                <div
+                    class="max-w-2xl mx-auto max-h-[48vh] overflow-y-auto px-2 grid grid-cols-1 sm:grid-cols-2 gap-5 pb-2">
+                    <!-- Photo Block 1 -->
+                    <div class="polaroid rounded-xl transform -rotate-1">
+                        <div
+                            class="w-full h-40 bg-pink-200 rounded-lg overflow-hidden relative flex items-center justify-center">
+                            <!-- Replace src with your actual image URL or keep it as an aesthetic placeholder view -->
+                            <span class="text-4xl">📸</span>
+                            <img src="/assets//pic1.jpeg" alt="Memory"
+                                class="absolute inset-0 w-full h-full object-contain opacity-90 hover:scale-110 transition duration-500">
+                        </div>
+                        <p class="font-love text-gray-700 text-lg mt-3">That effortless smile</p>
+                    </div>
+
+                    <!-- Photo Block 2 -->
+                    <div class="polaroid rounded-xl transform rotate-1">
+                        <div
+                            class="w-full h-40 bg-purple-200 rounded-lg overflow-hidden relative flex items-center justify-center">
+                            <span class="text-4xl">☕</span>
+                            <img src="assets/pic3.png" alt="Memory"
+                                class="absolute inset-0 w-full h-full object-contain opacity-90 hover:scale-110 transition duration-500">
+                        </div>
+                        <p class="font-love text-gray-700 text-lg mt-3">Classy</p>
+                    </div>
+
+                    <!-- Photo Block 3 -->
+                    <div class="polaroid rounded-xl transform rotate-1">
+                        <div
+                            class="w-full h-40 bg-yellow-100 rounded-lg overflow-hidden relative flex items-center justify-center">
+                            <span class="text-4xl">✨</span>
+                            <img src="assets/pic4.png" alt="Memory"
+                                class="absolute inset-0 w-full h-full object-contain opacity-90 hover:scale-110 transition duration-500">
+                        </div>
+                        <p class="font-love text-gray-700 text-lg mt-3">Minimilastic</p>
+                    </div>
+
+                    <!-- Photo Block 4 -->
+                    <div class="polaroid rounded-xl transform -rotate-1">
+                        <div
+                            class="w-full h-40 bg-pink-100 rounded-lg overflow-hidden relative flex items-center justify-center">
+                            <span class="text-4xl">💖</span>
+                            <img src="assets/pic2.png" alt="Memory"
+                                class="absolute inset-0 w-full h-full object-contain opacity-90 hover:scale-110 transition duration-500">
+                        </div>
+                        <p class="font-love text-gray-700 text-lg mt-3">Brightening ordinary days</p>
+                    </div>
+                </div>
+
+                <button onclick="nextStep()"
+                    class="mt-6 bg-white text-pink-600 px-8 py-3 rounded-full font-bold shadow-xl hover:scale-105 active:scale-95 transition">Read
+                    Final Wish 💌</button>
+            </section>
+
+            <!-- Step 5: Final Message -->
+            <section class="step w-full" data-step="5">
+                <p class="uppercase tracking-[.35em] text-sm text-pink-100 mb-4">Final Message</p>
+                <h2 class="font-love text-4xl sm:text-5xl mb-6">Happy Birthday Veltu raam 🎂</h2>
+
                 <div
                     class="max-w-2xl mx-auto text-left bg-white/20 rounded-3xl p-6 border border-white/25 max-h-[45vh] overflow-y-auto">
                     <p class="text-lg leading-8 text-black/95">
                         Even though we’ve only known each other for a few months, meeting you has genuinely been one of
-                        the best
-                        highlights of my year. From our very first conversations, your energy, kindness, and the way you
-                        carry
-                        yourself stood out to me right away. It’s rare to meet someone who feels so effortless to be
-                        around, and I’m
-                        really glad our paths crossed when they did.
+                        the best highlights of my year. From our very first conversations, your energy, kindness, and
+                        the way you
+                        carry yourself stood out to me right away. It’s rare to meet someone who feels so effortless to
+                        be
+                        around, and I’m really glad our paths crossed when they did.
                     </p>
                     <p class="text-lg leading-8 text-black/95 mt-4">
                         Over these past three months, I’ve come to really admire how genuine and thoughtful you are.
-                        Whether we’re
-                        just talking about random things or sharing a good laugh, you have a way of making ordinary
-                        moments feel a
-                        lot brighter. You deserve to be celebrated properly today—not just because it’s your birthday,
-                        but because
-                        of the amazing person you are.❤️
+                        Whether we’re just talking about random things or sharing a good laugh, you have a way of making
+                        ordinary
+                        moments feel a lot brighter. You deserve to be celebrated properly today—not just because it’s
+                        your birthday,
+                        but because of the amazing person you are.❤️
                     </p>
                     <p class="text-lg leading-8 text-black/95 mt-4">As you step into this new year of your life, I hope
-                        it brings
-                        you everything you’ve been hoping for, plenty of reasons to smile, and moments that make you
-                        feel as special
-                        as you make the people around you feel. Enjoy every bit of your day, eat way too much cake, and
-                        have the
-                        best time.</p>
+                        it brings you everything you’ve been hoping for, plenty of reasons to smile, and moments that
+                        make you
+                        feel as special as you make the people around you feel. Enjoy every bit of your day, eat way too
+                        much cake, and
+                        have the best time.</p>
                     <h5 class="font-love text-xl sm:text-xl mt-6">Wishing you the happiest birthday and an incredible
-                        year
-                        ahead! 🎂</h5>
+                        year ahead! 🎂</h5>
                 </div>
 
                 <button onclick="restartWish()"
@@ -422,7 +469,7 @@
             steps[index].classList.add('active');
             currentStep = index;
             if (index === 1) moveHeart();
-            if (index === 4) launchConfetti();
+            if (index === 5) launchConfetti();
         }
 
         function nextStep() {
@@ -482,7 +529,7 @@
         function blowCandle() {
             document.getElementById('flame').style.display = 'none';
             launchConfetti(120);
-            setTimeout(() => showStep(4), 1200);
+            setTimeout(() => showStep(4), 1200); // Transitions to photo gallery step
         }
 
         function launchConfetti(amount = 100) {
