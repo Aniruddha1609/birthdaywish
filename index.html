@@ -238,6 +238,7 @@
             border-radius: 50% 50% 50% 50%;
             animation: flame .25s infinite alternate;
             transform-origin: bottom;
+            cursor: pointer;
         }
 
         @keyframes flame {
@@ -302,6 +303,13 @@
 </head>
 
 <body class="min-h-screen flex items-center justify-center px-4 text-black relative">
+    <!-- Floating Music Toggle Button (Appears once candle is blown) -->
+    <button id="musicToggle" onclick="toggleMusic()"
+        class="hidden fixed top-5 right-5 z-50 bg-white/85 backdrop-blur-md text-pink-600 px-4 py-2 rounded-full font-semibold shadow-lg hover:scale-105 transition flex items-center gap-2 border border-pink-200">
+        <span id="musicIcon">🔊</span>
+        <span id="musicText" class="text-sm">Music On</span>
+    </button>
+
     <div class="balloon bg-pink-400 left-8 top-20"></div>
     <div class="balloon bg-purple-400 right-10 top-28" style="animation-delay:1s"></div>
     <div class="balloon bg-yellow-300 left-1/4 bottom-16" style="animation-delay:2s"></div>
@@ -347,12 +355,12 @@
             <!-- Step 3: Cake & Candle -->
             <section class="step w-full" data-step="3">
                 <div class="cake mb-8">
-                    <div class="flame" id="flame"></div>
+                    <div class="flame" id="flame" onclick="blowCandle()"></div>
                     <div class="candle"></div>
                     <div class="cake-top"></div>
                     <div class="cake-base"></div>
                 </div>
-                <p class="mb-6 text-black/90">Click the candle flame to blow it out.</p>
+                <p class="mb-6 text-black/90">Click the candle flame or button to blow it out.</p>
                 <button onclick="blowCandle()"
                     class="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 rounded-full font-bold shadow-xl transition">Blow
                     Candle 🕯️</button>
@@ -369,9 +377,8 @@
                     <div class="polaroid rounded-xl transform -rotate-1">
                         <div
                             class="w-full h-40 bg-pink-200 rounded-lg overflow-hidden relative flex items-center justify-center">
-                            <!-- Replace src with your actual image URL or keep it as an aesthetic placeholder view -->
                             <span class="text-4xl">📸</span>
-                            <img src="/assets//pic1.jpeg" alt="Memory"
+                            <img src="/assets/pic1.jpeg" alt="Memory"
                                 class="absolute inset-0 w-full h-full object-contain opacity-90 hover:scale-110 transition duration-500">
                         </div>
                         <p class="font-love text-gray-700 text-lg mt-3">That effortless smile</p>
@@ -464,6 +471,141 @@
         const heartGame = document.getElementById('heartGame');
         const scoreEl = document.getElementById('score');
 
+        // --- Built-in Web Audio API Happy Birthday Music Box Synthesizer ---
+        let audioCtx = null;
+        let isPlayingMusic = false;
+        let isMuted = false;
+        let noteTimeout = null;
+        let currentNoteIndex = 0;
+
+        // Happy Birthday melody notes (Frequency in Hz, Duration in seconds)
+        const birthdayMelody = [
+            // Happy birthday to you
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.25 },
+            { freq: 293.66, dur: 0.60 }, { freq: 261.63, dur: 0.60 },
+            { freq: 349.23, dur: 0.60 }, { freq: 329.63, dur: 1.00 },
+
+            // Happy birthday to you
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.25 },
+            { freq: 293.66, dur: 0.60 }, { freq: 261.63, dur: 0.60 },
+            { freq: 392.00, dur: 0.60 }, { freq: 349.23, dur: 1.00 },
+
+            // Happy birthday dear Veltu...
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.25 },
+            { freq: 523.25, dur: 0.60 }, { freq: 440.00, dur: 0.60 },
+            { freq: 349.23, dur: 0.60 }, { freq: 329.63, dur: 0.60 },
+            { freq: 293.66, dur: 1.00 },
+
+            // Happy birthday to you!
+            { freq: 466.16, dur: 0.35 }, { freq: 466.16, dur: 0.25 },
+            { freq: 440.00, dur: 0.60 }, { freq: 349.23, dur: 0.60 },
+            { freq: 392.00, dur: 0.60 }, { freq: 349.23, dur: 1.30 }
+        ];
+
+        function playMusicBoxNote(freq, duration) {
+            if (!audioCtx || isMuted) return;
+
+            const now = audioCtx.currentTime;
+
+            // Primary warm bell/music-box oscillator
+            const osc1 = audioCtx.createOscillator();
+            // Soft harmonic overtone
+            const osc2 = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(freq, now);
+
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(freq * 2, now);
+
+            // Envelope for soft music-box chime feel
+            gainNode.gain.setValueAtTime(0.001, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.22, now + 0.04);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration + 0.35);
+
+            const overtoneGain = audioCtx.createGain();
+            overtoneGain.gain.setValueAtTime(0.04, now);
+
+            osc1.connect(gainNode);
+            osc2.connect(overtoneGain);
+            overtoneGain.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + duration + 0.4);
+            osc2.stop(now + duration + 0.4);
+        }
+
+        function scheduleNextNote() {
+            if (!isPlayingMusic) return;
+
+            const note = birthdayMelody[currentNoteIndex];
+            playMusicBoxNote(note.freq, note.dur);
+
+            currentNoteIndex++;
+            let pauseAfter = 40; // slight gap between notes
+
+
+            if (currentNoteIndex >= birthdayMelody.length) {
+                currentNoteIndex = 0;
+                pauseAfter = 900;
+            }
+
+            noteTimeout = setTimeout(scheduleNextNote, (note.dur * 1000) + pauseAfter);
+        }
+
+        function startBirthdayMusic() {
+            if (isPlayingMusic) return;
+
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isPlayingMusic = true;
+            isMuted = false;
+            currentNoteIndex = 0;
+
+            // Show floating mute/unmute pill
+            const toggleBtn = document.getElementById('musicToggle');
+            toggleBtn.classList.remove('hidden');
+            updateMusicButtonUI();
+
+            scheduleNextNote();
+        }
+
+        function stopBirthdayMusic() {
+            isPlayingMusic = false;
+            clearTimeout(noteTimeout);
+            currentNoteIndex = 0;
+            document.getElementById('musicToggle').classList.add('hidden');
+        }
+
+        function toggleMusic() {
+            isMuted = !isMuted;
+            if (!isMuted && audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            updateMusicButtonUI();
+        }
+
+        function updateMusicButtonUI() {
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+            if (isMuted) {
+                icon.textContent = '🔇';
+                text.textContent = 'Muted';
+            } else {
+                icon.textContent = '🔊';
+                text.textContent = 'Music On';
+            }
+        }
+        // ------------------------------------------------------------------
+
         function showStep(index) {
             steps.forEach(step => step.classList.remove('active'));
             steps[index].classList.add('active');
@@ -528,8 +670,9 @@
 
         function blowCandle() {
             document.getElementById('flame').style.display = 'none';
+            startBirthdayMusic(); // Starts Happy Birthday music and keeps playing through the end
             launchConfetti(120);
-            setTimeout(() => showStep(4), 1200); // Transitions to photo gallery step
+            setTimeout(() => showStep(4), 1200);
         }
 
         function launchConfetti(amount = 100) {
@@ -547,6 +690,7 @@
         }
 
         function restartWish() {
+            stopBirthdayMusic(); // Stops music when replaying from the beginning
             score = 0;
             scoreEl.textContent = '0';
             document.getElementById('flame').style.display = 'block';
